@@ -6,13 +6,14 @@ import {
     TouchableOpacity,
     TextInput,
     Alert,
-    Image,
+    Modal,
     Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker } from 'react-native-maps';
 import { getThemeStyles } from '../styles/styles';
+import BiometricAuth from './BiometricAuth';
 
 const { width } = Dimensions.get('window');
 
@@ -20,8 +21,12 @@ export default function HotspotDetail({ route, navigation, theme }) {
     const { hotspot } = route.params;
     const [isFavorite, setIsFavorite] = useState(false);
     const [notes, setNotes] = useState('');
+    const [tempNotes, setTempNotes] = useState('');
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [rating, setRating] = useState(0);
     const [visitCount, setVisitCount] = useState(0);
+    const [showBiometricModal, setShowBiometricModal] = useState(false);
+    const [pendingAction, setPendingAction] = useState(null);
     const styles = getThemeStyles(theme);
 
     useEffect(() => {
@@ -39,7 +44,10 @@ export default function HotspotDetail({ route, navigation, theme }) {
 
             // Laad notities
             const savedNotes = await AsyncStorage.getItem(`notes_${hotspot.id}`);
-            if (savedNotes) setNotes(savedNotes);
+            if (savedNotes) {
+                setNotes(savedNotes);
+                setTempNotes(savedNotes);
+            }
 
             // Laad rating
             const savedRating = await AsyncStorage.getItem(`rating_${hotspot.id}`);
@@ -53,55 +61,103 @@ export default function HotspotDetail({ route, navigation, theme }) {
         }
     };
 
-    const toggleFavorite = async () => {
-        try {
-            const favorites = await AsyncStorage.getItem('favorites');
-            let favList = favorites ? JSON.parse(favorites) : [];
+    const requireBiometricAuth = (action, callback) => {
+        setPendingAction({ action, callback });
+        setShowBiometricModal(true);
+    };
 
-            if (isFavorite) {
-                favList = favList.filter(id => id !== hotspot.id);
-            } else {
-                favList.push(hotspot.id);
+    const handleBiometricSuccess = () => {
+        setShowBiometricModal(false);
+        if (pendingAction?.callback) {
+            pendingAction.callback();
+        }
+        setPendingAction(null);
+    };
+
+    const handleBiometricCancel = () => {
+        setShowBiometricModal(false);
+        setPendingAction(null);
+    };
+
+    const toggleFavorite = () => {
+        requireBiometricAuth('favorieten wijzigen', async () => {
+            try {
+                const favorites = await AsyncStorage.getItem('favorites');
+                let favList = favorites ? JSON.parse(favorites) : [];
+
+                if (isFavorite) {
+                    favList = favList.filter(id => id !== hotspot.id);
+                } else {
+                    favList.push(hotspot.id);
+                }
+
+                await AsyncStorage.setItem('favorites', JSON.stringify(favList));
+                setIsFavorite(!isFavorite);
+                Alert.alert('Succes', `Locatie ${isFavorite ? 'verwijderd uit' : 'toegevoegd aan'} favorieten`);
+            } catch (error) {
+                Alert.alert('Error', 'Kon favoriet niet opslaan');
             }
-
-            await AsyncStorage.setItem('favorites', JSON.stringify(favList));
-            setIsFavorite(!isFavorite);
-        } catch (error) {
-            Alert.alert('Error', 'Kon favoriet niet opslaan');
-        }
+        });
     };
 
-    const saveNotes = async (text) => {
-        setNotes(text);
-        try {
-            await AsyncStorage.setItem(`notes_${hotspot.id}`, text);
-        } catch (error) {
-            console.log('Error saving notes:', error);
-        }
+    const handleNotesChange = (text) => {
+        setTempNotes(text);
+        setHasUnsavedChanges(text !== notes);
     };
 
-    const setUserRating = async (newRating) => {
-        setRating(newRating);
-        try {
-            await AsyncStorage.setItem(`rating_${hotspot.id}`, newRating.toString());
-        } catch (error) {
-            console.log('Error saving rating:', error);
+    const saveNotes = () => {
+        if (!hasUnsavedChanges) {
+            Alert.alert('Geen wijzigingen', 'Er zijn geen wijzigingen om op te slaan.');
+            return;
         }
+
+        requireBiometricAuth('notities opslaan', async () => {
+            try {
+                await AsyncStorage.setItem(`notes_${hotspot.id}`, tempNotes);
+                setNotes(tempNotes);
+                setHasUnsavedChanges(false);
+                Alert.alert('Succes', 'Notities zijn opgeslagen');
+            } catch (error) {
+                console.log('Error saving notes:', error);
+                Alert.alert('Error', 'Kon notities niet opslaan');
+            }
+        });
     };
 
-    const incrementVisitCount = async () => {
-        const newCount = visitCount + 1;
-        setVisitCount(newCount);
-        try {
-            await AsyncStorage.setItem(`visits_${hotspot.id}`, newCount.toString());
-            Alert.alert('Bezoek geregistreerd!', `Je hebt dit gebied nu ${newCount} keer bezocht.`);
-        } catch (error) {
-            console.log('Error saving visit count:', error);
-        }
+    const cancelNotesChanges = () => {
+        setTempNotes(notes);
+        setHasUnsavedChanges(false);
+    };
+
+    const setUserRating = (newRating) => {
+        requireBiometricAuth('beoordeling wijzigen', async () => {
+            try {
+                await AsyncStorage.setItem(`rating_${hotspot.id}`, newRating.toString());
+                setRating(newRating);
+                Alert.alert('Succes', `Beoordeling van ${newRating} sterren opgeslagen`);
+            } catch (error) {
+                console.log('Error saving rating:', error);
+                Alert.alert('Error', 'Kon beoordeling niet opslaan');
+            }
+        });
+    };
+
+    const incrementVisitCount = () => {
+        requireBiometricAuth('bezoek registreren', async () => {
+            const newCount = visitCount + 1;
+            try {
+                await AsyncStorage.setItem(`visits_${hotspot.id}`, newCount.toString());
+                setVisitCount(newCount);
+                Alert.alert('Bezoek geregistreerd!', `Je hebt dit gebied nu ${newCount} keer bezocht.`);
+            } catch (error) {
+                console.log('Error saving visit count:', error);
+                Alert.alert('Error', 'Kon bezoek niet registreren');
+            }
+        });
     };
 
     const navigateToMap = () => {
-        navigation.navigate('Kaart', { selectedHotspot: hotspot });
+        navigation.navigate('HotspotMapDetail', { hotspot });
     };
 
     const renderStars = () => {
@@ -135,125 +191,187 @@ export default function HotspotDetail({ route, navigation, theme }) {
     };
 
     return (
-        <ScrollView style={styles.container}>
-            {/* Header met afbeelding placeholder */}
-            <View style={styles.imageContainer}>
-                <View style={styles.imagePlaceholder}>
-                    <Ionicons
-                        name={getTypeIcon(hotspot.type)}
-                        size={60}
-                        color="#27ae60"
+        <>
+            <ScrollView style={styles.container}>
+                {/* Header met afbeelding placeholder */}
+                <View style={styles.imageContainer}>
+                    <View style={styles.imagePlaceholder}>
+                        <Ionicons
+                            name={getTypeIcon(hotspot.type)}
+                            size={60}
+                            color="#27ae60"
+                        />
+                    </View>
+                    <TouchableOpacity
+                        style={styles.favoriteButtonOverlay}
+                        onPress={toggleFavorite}
+                    >
+                        <Ionicons
+                            name={isFavorite ? 'heart' : 'heart-outline'}
+                            size={28}
+                            color={isFavorite ? '#e74c3c' : '#ffffff'}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Basis informatie */}
+                <View style={styles.infoSection}>
+                    <Text style={styles.title}>{hotspot.name}</Text>
+                    <View style={styles.typeContainer}>
+                        <Ionicons name={getTypeIcon(hotspot.type)} size={16} color="#27ae60" />
+                        <Text style={styles.typeText}>{hotspot.type}</Text>
+                    </View>
+                    <Text style={styles.description}>{hotspot.description}</Text>
+                </View>
+
+                {/* Statistieken */}
+                <View style={styles.statsSection}>
+                    <View style={styles.statItem}>
+                        <Text style={styles.statNumber}>{visitCount}</Text>
+                        <Text style={styles.statLabel}>Bezoeken</Text>
+                    </View>
+                    <View style={styles.statItem}>
+                        <Text style={styles.statNumber}>{rating > 0 ? rating : '-'}</Text>
+                        <Text style={styles.statLabel}>Jouw Rating</Text>
+                    </View>
+                </View>
+
+                {/* Rating sectie */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                        <Ionicons name="shield-checkmark" size={18} color="#27ae60" /> Beoordeling
+                    </Text>
+                    {renderStars()}
+                    <Text style={styles.ratingText}>
+                        {rating > 0 ? `Je hebt ${rating} ${rating === 1 ? 'ster' : 'sterren'} gegeven` : 'Geef een beoordeling'}
+                    </Text>
+                    <Text style={styles.securityNote}>🔒 Beveiligd met biometrische authenticatie</Text>
+                </View>
+
+                {/* Notities sectie */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                        <Ionicons name="shield-checkmark" size={18} color="#27ae60" /> Persoonlijke Notities
+                    </Text>
+
+                    <TextInput
+                        style={[
+                            styles.notesInput,
+                            hasUnsavedChanges && styles.notesInputModified
+                        ]}
+                        placeholder="Voeg je eigen notities toe..."
+                        placeholderTextColor="#7f8c8d"
+                        value={tempNotes}
+                        onChangeText={handleNotesChange}
+                        multiline
+                        numberOfLines={4}
+                        textAlignVertical="top"
                     />
-                </View>
-                <TouchableOpacity
-                    style={styles.favoriteButtonOverlay}
-                    onPress={toggleFavorite}
-                >
-                    <Ionicons
-                        name={isFavorite ? 'heart' : 'heart-outline'}
-                        size={28}
-                        color={isFavorite ? '#e74c3c' : '#ffffff'}
-                    />
-                </TouchableOpacity>
-            </View>
 
-            {/* Basis informatie */}
-            <View style={styles.infoSection}>
-                <Text style={styles.title}>{hotspot.name}</Text>
-                <View style={styles.typeContainer}>
-                    <Ionicons name={getTypeIcon(hotspot.type)} size={16} color="#27ae60" />
-                    <Text style={styles.typeText}>{hotspot.type}</Text>
-                </View>
-                <Text style={styles.description}>{hotspot.description}</Text>
-            </View>
+                    {/* Status indicator */}
+                    {hasUnsavedChanges && (
+                        <View style={styles.unsavedIndicator}>
+                            <Ionicons name="warning" size={16} color="#ff6b35" />
+                            <Text style={styles.unsavedText}>Je hebt niet-opgeslagen wijzigingen</Text>
+                        </View>
+                    )}
 
-            {/* Statistieken */}
-            <View style={styles.statsSection}>
-                <View style={styles.statItem}>
-                    <Text style={styles.statNumber}>{visitCount}</Text>
-                    <Text style={styles.statLabel}>Bezoeken</Text>
-                </View>
-                <View style={styles.statItem}>
-                    <Text style={styles.statNumber}>{rating > 0 ? rating : '-'}</Text>
-                    <Text style={styles.statLabel}>Jouw Rating</Text>
-                </View>
-            </View>
-
-            {/* Rating sectie */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Beoordeling</Text>
-                {renderStars()}
-                <Text style={styles.ratingText}>
-                    {rating > 0 ? `Je hebt ${rating} ${rating === 1 ? 'ster' : 'sterren'} gegeven` : 'Geef een beoordeling'}
-                </Text>
-            </View>
-
-            {/* Notities sectie */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Persoonlijke Notities</Text>
-                <TextInput
-                    style={styles.notesInput}
-                    placeholder="Voeg je eigen notities toe..."
-                    placeholderTextColor="#7f8c8d"
-                    value={notes}
-                    onChangeText={saveNotes}
-                    multiline
-                    numberOfLines={4}
-                    textAlignVertical="top"
-                />
-            </View>
-
-            {/* Mini kaart */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Locatie</Text>
-                <TouchableOpacity onPress={navigateToMap}>
-                    <View style={styles.miniMapContainer}>
-                        <MapView
-                            style={styles.miniMap}
-                            initialRegion={{
-                                latitude: hotspot.latitude,
-                                longitude: hotspot.longitude,
-                                latitudeDelta: 0.02,
-                                longitudeDelta: 0.02,
-                            }}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            rotateEnabled={false}
-                            pitchEnabled={false}
+                    {/* Action buttons */}
+                    <View style={styles.notesActionContainer}>
+                        <TouchableOpacity
+                            style={[
+                                styles.notesButton,
+                                styles.saveButton,
+                                !hasUnsavedChanges && styles.buttonDisabled
+                            ]}
+                            onPress={saveNotes}
+                            disabled={!hasUnsavedChanges}
                         >
-                            <Marker
-                                coordinate={{
+                            <Ionicons name="save" size={18} color="#ffffff" />
+                            <Text style={styles.notesButtonText}>Opslaan</Text>
+                        </TouchableOpacity>
+
+                        {hasUnsavedChanges && (
+                            <TouchableOpacity
+                                style={[styles.notesButton, styles.cancelButton]}
+                                onPress={cancelNotesChanges}
+                            >
+                                <Ionicons name="close" size={18} color="#e53e3e" />
+                                <Text style={[styles.notesButtonText, styles.cancelButtonText]}>Annuleren</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+
+                    <Text style={styles.securityNote}>🔒 Beveiligd met biometrische authenticatie</Text>
+                </View>
+
+                {/* Mini kaart */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Locatie</Text>
+                    <TouchableOpacity onPress={navigateToMap}>
+                        <View style={styles.miniMapContainer}>
+                            <MapView
+                                style={styles.miniMap}
+                                initialRegion={{
                                     latitude: hotspot.latitude,
                                     longitude: hotspot.longitude,
+                                    latitudeDelta: 0.02,
+                                    longitudeDelta: 0.02,
                                 }}
-                                title={hotspot.name}
-                            />
-                        </MapView>
-                        <View style={styles.mapOverlay}>
-                            <Text style={styles.mapOverlayText}>Tik voor volledige kaart</Text>
+                                scrollEnabled={false}
+                                zoomEnabled={false}
+                                rotateEnabled={false}
+                                pitchEnabled={false}
+                            >
+                                <Marker
+                                    coordinate={{
+                                        latitude: hotspot.latitude,
+                                        longitude: hotspot.longitude,
+                                    }}
+                                    title={hotspot.name}
+                                />
+                            </MapView>
+                            <View style={styles.mapOverlay}>
+                                <Text style={styles.mapOverlayText}>Tik voor volledige kaart</Text>
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
+                    </TouchableOpacity>
+                </View>
 
-            {/* Actie knoppen */}
-            <View style={styles.actionSection}>
-                <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={incrementVisitCount}
-                >
-                    <Ionicons name="checkmark-circle" size={20} color="#ffffff" />
-                    <Text style={styles.actionButtonText}>Bezoek Registreren</Text>
-                </TouchableOpacity>
+                {/* Actie knoppen */}
+                <View style={styles.actionSection}>
+                    <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={incrementVisitCount}
+                    >
+                        <Ionicons name="shield-checkmark" size={20} color="#ffffff" />
+                        <Text style={styles.actionButtonText}>Bezoek Registreren</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={[styles.actionButton, styles.secondaryButton]}
-                    onPress={navigateToMap}
-                >
-                    <Ionicons name="map" size={20} color="#27ae60" />
-                    <Text style={[styles.actionButtonText, styles.secondaryButtonText]}>Bekijk op Kaart</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+                    <TouchableOpacity
+                        style={[styles.actionButton, styles.secondaryButton]}
+                        onPress={navigateToMap}
+                    >
+                        <Ionicons name="map" size={20} color="#27ae60" />
+                        <Text style={[styles.actionButtonText, styles.secondaryButtonText]}>Bekijk op Kaart</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+
+            {/* Biometric Authentication Modal */}
+            <Modal
+                visible={showBiometricModal}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={handleBiometricCancel}
+            >
+                <BiometricAuth
+                    theme={theme}
+                    onSuccess={handleBiometricSuccess}
+                    onCancel={handleBiometricCancel}
+                    action={pendingAction?.action || 'wijzigen'}
+                />
+            </Modal>
+        </>
     );
 }
