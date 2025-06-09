@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "name": "Hoge Veluwe Nationaal Park",
+    "type": "nationaal park",
+    "description": "Prachtig nationaal park met diverse natuur, wildlife en het Kröller-Müller Museum",
+    "latitude": 52.0833,
+    "longitude": 5.8167
+  },
+  {
+    "id": 2,
+    "name": "Keukenhof",
+    "type": "bloementuin",
+    "description": "Wereldberoemde bloementuin met miljoenen tulpen, narcissen en hyacinten",
+    "latitude": 52.2719,
+    "longitude": 4.5469
+  },
+  {
+    "id": 3,
+    "name": "Biesbosch Nationaal Park",
+    "type": "wetland",
+    "description": "Uniek zoetwatergetijdenlandschap met uitgestrekte rietlanden",
+    "latitude": 51.7500,
+    "longitude": 4.7500
+  },
+  {
+    "id": 4,
+    "name": "Kinderdijk",
+    "type": "cultuurlandschap",
+    "description": "Iconische molens in een prachtig polderlandschap, UNESCO werelderfgoed",
+    "latitude": 51.8839,
+    "longitude": 4.6417
+  },
+  {
+    "id": 5,
+    "name": "Zaanse Schans",
+    "type": "cultuurlandschap",
+    "description": "Historische molens en groene weilanden langs de Zaan",
+    "latitude": 52.4747,
+    "longitude": 4.8175
+  },
+  {
+    "id": 6,
+    "name": "Giethoorn",
+    "type": "waterrijk gebied",
+    "description": "Het 'Venetië van Nederland' met grachten en rietgedekte boerderijen",
+    "latitude": 52.7386,
+    "longitude": 6.0847
+  },
+  {
+    "id": 7,
+    "name": "Waddenzee",
+    "type": "nationaal park",
+    "description": "Werelderfgoed getijdengebied met unieke flora en fauna",
+    "latitude": 53.4308,
+    "longitude": 6.8417
+  },
+  {
+    "id": 8,
+    "name": "Amsterdamse Bos",
+    "type": "stadspark",
+    "description": "Groot recreatiegebied met bossen, meren en weilanden nabij Amsterdam",
+    "latitude": 52.3147,
+    "longitude": 4.8181
+  },
+  {
+    "id": 9,
+    "name": "Vondelpark",
+    "type": "stadspark",
+    "description": "Het beroemdste stadspark van Nederland in het hart van Amsterdam",
+    "latitude": 52.3579,
+    "longitude": 4.8686
+  },
+  {
+    "id": 10,
+    "name": "Efteling Bosrijk",
+    "type": "bos",
+    "description": "Sprookjesachtig bos rondom het beroemde attractiepark",
+    "latitude": 51.6500,
+    "longitude": 5.0500
+  },
+  {
+    "id": 11,
+    "name": "Veluwezoom Nationaal Park",
+    "type": "nationaal park",
+    "description": "Gevarieerd landschap met heide, bossen en uitkijkpunten",
+    "latitude": 52.0000,
+    "longitude": 6.0000
+  },
+  {
+    "id": 12,
+    "name": "Texel Nationaal Park",
+    "type": "nationaal park",
+    "description": "Waddeneiland met duinen, bossen en vogelrijke gebieden",
+    "latitude": 53.0833,
+    "longitude": 4.7833
+  },
+  {
+    "id": 13,
+    "name": "Schiermonnikoog Nationaal Park",
+    "type": "nationaal park",
+    "description": "Ongerepte natuur op het meest oostelijke Waddeneiland",
+    "latitude": 53.4833,
+    "longitude": 6.1667
+  },
+  {
+    "id": 14,
+    "name": "Loonse en Drunense Duinen",
+    "type": "natuurgebied",
+    "description": "De 'Sahara van Brabant' met uitgestrekte zandverstuivingen",
+    "latitude": 51.6667,
+    "longitude": 5.1667
+  },
+  {
+    "id": 15,
+    "name": "Hollandse Hout",
+    "type": "bos",
+    "description": "Groot bosgebied met wandel- en fietspaden nabij Lelystad",
+    "latitude": 52.4833,
+    "longitude": 5.4167
+  },
+  {
+    "id": 16,
+    "name": "Grenspark Maas-Swalm-Nette",
+    "type": "natuurpark",
+    "description": "Grensoverschrijdend natuurgebied met vennen en bossen",
+    "latitude": 51.2500,
+    "longitude": 6.0000
+  },
+  {
+    "id": 17,
+    "name": "Nationaal Park Sallandse Heuvelrug",
+    "type": "nationaal park",
+    "description": "Heuvelachtig landschap met heide, bossen en sprengen",
+    "latitude": 52.3333,
+    "longitude": 6.3333
+  },
+  {
+    "id": 18,
+    "name": "Oostvaardersplassen",
+    "type": "natuurreservaat",
+    "description": "Uniek natuurgebied ontstaan uit drooggelegd land",
+    "latitude": 52.4167,
+    "longitude": 5.3333
+  },
+  {
+    "id": 19,
+    "name": "Bieslandse Bos",
+    "type": "bos",
+    "description": "Bosgebied met oude beuken en eiken nabij Delft",
+    "latitude": 52.0000,
+    "longitude": 4.3333
+  },
+  {
+    "id": 20,
+    "name": "Nationaal Park Zuid-Kennemerland",
+    "type": "nationaal park",
+    "description": "Duinlandschap met bossen, meren en historische landgoederen",
+    "latitude": 52.3333,
+    "longitude": 4.6000
+  },
+  {
+    "id": 21,
+    "name": "Hunebedden Drenthe",
+    "type": "cultuurlandschap",
+    "description": "Prehistorische grafmonumenten in een prachtig heidelandschap",
+    "latitude": 52.9167,
+    "longitude": 6.6667
+  },
+  {
+    "id": 22,
+    "name": "Waterland",
+    "type": "waterrijk gebied",
+    "description": "Authentiek polderlandschap met sloten, weilanden en dijken",
+    "latitude": 52.4667,
+    "longitude": 4.9667
+  },
+  {
+    "id": 23,
+    "name": "Nationaal Park Drents-Friese Wold",
+    "type": "nationaal park",
+    "description": "Uitgestrekte heide- en bosgebieden met karakteristieke schaapskuddes",
+    "latitude": 52.8333,
+    "longitude": 6.2500
+  },
+  {
+    "id": 24,
+    "name": "Zwin Natuur Park",
+    "type": "natuurpark",
+    "description": "Internationaal natuurgebied met slikken, schorren en duinen",
+    "latitude": 51.3667,
+    "longitude": 3.3500
+  },
+  {
+    "id": 25,
+    "name": "Nationaal Park Dwingelderveld",
+    "type": "nationaal park",
+    "description": "Grootste aaneengesloten heidegebied van West-Europa",
+    "latitude": 52.7833,
+    "longitude": 6.4167
+  },
+  {
+    "id": 26,
+    "name": "Haarlemmermeer Bos",
+    "type": "bos",
+    "description": "Jong bosgebied met gevarieerde boomsoorten en recreatiemogelijkheden",
+    "latitude": 52.3000,
+    "longitude": 4.6833
+  },
+  {
+    "id": 27,
+    "name": "Nationaal Park Lauwersmeer",
+    "type": "nationaal park",
+    "description": "Voormalige zeebodem nu rijk vogelgebied en donkere hemel park",
+    "latitude": 53.3500,
+    "longitude": 6.2000
+  },
+  {
+    "id": 28,
+    "name": "Kralingse Bos",
+    "type": "stadspark",
+    "description": "Groot stadspark met bos en plas in Rotterdam",
+    "latitude": 51.9333,
+    "longitude": 4.5167
+  },
+  {
+    "id": 29,
+    "name": "Nationaal Park Nieuw Land",
+    "type": "nationaal park",
+    "description": "Jonge natuur in de Flevopolder met bijzondere flora en fauna",
+    "latitude": 52.6167,
+    "longitude": 5.7500
+  },
+  {
+    "id": 30,
+    "name": "Utrechtse Heuvelrug",
+    "type": "nationaal park",
+    "description": "Heuvelachtig bosgebied met landgoederen en kastelen",
+    "latitude": 52.1167,
+    "longitude": 5.3000
+  }
+]
