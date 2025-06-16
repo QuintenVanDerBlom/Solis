@@ -5,7 +5,8 @@
     "type": "nationaal park",
     "description": "Prachtig nationaal park met diverse natuur, wildlife en het Kröller-Müller Museum",
     "latitude": 52.0833,
-    "longitude": 5.8167
+    "longitude": 5.8167,
+    "image_url": "https://www.hogeveluwe.nl/system/images/images/000/000/796/original/Landingspagina__Heidefoto_licentie.jpeg?1671004920"
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "type": "bloementuin",
     "description": "Wereldberoemde bloementuin met miljoenen tulpen, narcissen en hyacinten",
     "latitude": 52.2719,
-    "longitude": 4.5469
+    "longitude": 4.5469,
+    "image_url": "https://keukenhof.nl/wp-content/uploads/WhatsApp-Image-2023-05-15-at-22.16.55.jpeg"
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "type": "wetland",
     "description": "Uniek zoetwatergetijdenlandschap met uitgestrekte rietlanden",
     "latitude": 51.7500,
-    "longitude": 4.7500
+    "longitude": 4.7500,
+    "image_url": "https://www.holland.com/upload_mm/5/a/6/68783_fullimage_1_nederland%20waterland_nationaal%20park%20de%20biesbosch_1360x785.jpg"
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "type": "cultuurlandschap",
     "description": "Iconische molens in een prachtig polderlandschap, UNESCO werelderfgoed",
     "latitude": 51.8839,
-    "longitude": 4.6417
+    "longitude": 4.6417,
+    "image_url": "https://www.unesco.nl/system/files/heritage_images/Kinderdijk%20ochtend%20048.jpg"
   },
   {
     "id": 5,
@@ -37,7 +41,8 @@
     "type": "cultuurlandschap",
     "description": "Historische molens en groene weilanden langs de Zaan",
     "latitude": 52.4747,
-    "longitude": 4.8175
+    "longitude": 4.8175,
+    "image_url": "https://maxvakantieman.nl/wp-content/uploads/2024/03/Zaanse_shutterstock_1799715448-950x550.jpg"
   },
   {
     "id": 6,
@@ -45,7 +50,8 @@
     "type": "waterrijk gebied",
     "description": "Het 'Venetië van Nederland' met grachten en rietgedekte boerderijen",
     "latitude": 52.7386,
-    "longitude": 6.0847
+    "longitude": 6.0847,
+    "image_url": "https://www.reisroutes.be/userfiles/fotos/giethoorn_272_xl.jpg"
   },
   {
     "id": 7,
@@ -53,7 +59,8 @@
     "type": "nationaal park",
     "description": "Werelderfgoed getijdengebied met unieke flora en fauna",
     "latitude": 53.4308,
-    "longitude": 6.8417
+    "longitude": 6.8417,
+    "image_url": "https://assets.naupar.nl/media/thumbnails/05/ac/05acc64ed7cef0d01391daec04223e11/9c6edacc-6017-ea11-a811-000d3a44a5b1_vaargebied-waddenzee-v2-1000x500.jpg"
   },
   {
     "id": 8,
@@ -61,7 +68,8 @@
     "type": "stadspark",
     "description": "Groot recreatiegebied met bossen, meren en weilanden nabij Amsterdam",
     "latitude": 52.3147,
-    "longitude": 4.8181
+    "longitude": 4.8181,
+    "image_url": "https://cdn3.acsi.eu/6/7/4/f/674f186491956.jpg?impolicy=gallery-detail"
   },
   {
     "id": 9,
@@ -69,7 +77,8 @@
     "type": "stadspark",
     "description": "Het beroemdste stadspark van Nederland in het hart van Amsterdam",
     "latitude": 52.3579,
-    "longitude": 4.8686
+    "longitude": 4.8686,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg"
   },
   {
     "id": 10,
@@ -77,7 +86,8 @@
     "type": "bos",
     "description": "Sprookjesachtig bos rondom het beroemde attractiepark",
     "latitude": 51.6500,
-    "longitude": 5.0500
+    "longitude": 5.0500,
+    "image_url": "https://www.parkvakanties.nl/media/blog/1300/1300_1000x670.jpg"
   },
   {
     "id": 11,
@@ -85,7 +95,8 @@
     "type": "nationaal park",
     "description": "Gevarieerd landschap met heide, bossen en uitkijkpunten",
     "latitude": 52.0000,
-    "longitude": 6.0000
+    "longitude": 6.0000,
+    "image_url": "https://pixabay.com/photos/search/Veluwezoom-Nationaal-Park/"
   },
   {
     "id": 12,
@@ -93,7 +104,8 @@
     "type": "nationaal park",
     "description": "Waddeneiland met duinen, bossen en vogelrijke gebieden",
     "latitude": 53.0833,
-    "longitude": 4.7833
+    "longitude": 4.7833,
+    "image_url": "https://pixabay.com/photos/search/Texel-Nationaal-Park/"
   },
   {
     "id": 13,
@@ -101,7 +113,8 @@
     "type": "nationaal park",
     "description": "Ongerepte natuur op het meest oostelijke Waddeneiland",
     "latitude": 53.4833,
-    "longitude": 6.1667
+    "longitude": 6.1667,
+    "image_url": "https://pixabay.com/photos/search/Schiermonnikoog-Nationaal-Park/"
   },
   {
     "id": 14,
@@ -109,7 +122,8 @@
     "type": "natuurgebied",
     "description": "De 'Sahara van Brabant' met uitgestrekte zandverstuivingen",
     "latitude": 51.6667,
-    "longitude": 5.1667
+    "longitude": 5.1667,
+    "image_url": "https://pixabay.com/photos/search/Loonse-en-Drunense-Duinen/"
   },
   {
     "id": 15,
@@ -117,7 +131,8 @@
     "type": "bos",
     "description": "Groot bosgebied met wandel- en fietspaden nabij Lelystad",
     "latitude": 52.4833,
-    "longitude": 5.4167
+    "longitude": 5.4167,
+    "image_url": "https://pixabay.com/photos/search/Hollandse-Hout/"
   },
   {
     "id": 16,
@@ -125,7 +140,8 @@
     "type": "natuurpark",
     "description": "Grensoverschrijdend natuurgebied met vennen en bossen",
     "latitude": 51.2500,
-    "longitude": 6.0000
+    "longitude": 6.0000,
+    "image_url": "https://pixabay.com/photos/search/Grenspark-Maas-Swalm-Nette/"
   },
   {
     "id": 17,
@@ -133,7 +149,8 @@
     "type": "nationaal park",
     "description": "Heuvelachtig landschap met heide, bossen en sprengen",
     "latitude": 52.3333,
-    "longitude": 6.3333
+    "longitude": 6.3333,
+    "image_url": "https://pixabay.com/photos/search/Nationaal-Park-Sallandse-Heuvelrug/"
   },
   {
     "id": 18,
@@ -141,7 +158,8 @@
     "type": "natuurreservaat",
     "description": "Uniek natuurgebied ontstaan uit drooggelegd land",
     "latitude": 52.4167,
-    "longitude": 5.3333
+    "longitude": 5.3333,
+    "image_url": "https://pixabay.com/photos/search/Oostvaardersplassen/"
   },
   {
     "id": 19,
@@ -149,7 +167,8 @@
     "type": "bos",
     "description": "Bosgebied met oude beuken en eiken nabij Delft",
     "latitude": 52.0000,
-    "longitude": 4.3333
+    "longitude": 4.3333,
+    "image_url": "https://pixabay.com/photos/search/Bieslandse-Bos/"
   },
   {
     "id": 20,
@@ -157,7 +176,8 @@
     "type": "nationaal park",
     "description": "Duinlandschap met bossen, meren en historische landgoederen",
     "latitude": 52.3333,
-    "longitude": 4.6000
+    "longitude": 4.6000,
+    "image_url": "https://pixabay.com/photos/search/Nationaal-Park-Zuid-Kennemerland/"
   },
   {
     "id": 21,
@@ -165,7 +185,8 @@
     "type": "cultuurlandschap",
     "description": "Prehistorische grafmonumenten in een prachtig heidelandschap",
     "latitude": 52.9167,
-    "longitude": 6.6667
+    "longitude": 6.6667,
+    "image_url": "https://pixabay.com/photos/search/Hunebedden-Drenthe/"
   },
   {
     "id": 22,
@@ -173,7 +194,8 @@
     "type": "waterrijk gebied",
     "description": "Authentiek polderlandschap met sloten, weilanden en dijken",
     "latitude": 52.4667,
-    "longitude": 4.9667
+    "longitude": 4.9667,
+    "image_url": "https://pixabay.com/photos/search/Waterland/"
   },
   {
     "id": 23,
@@ -181,7 +203,8 @@
     "type": "nationaal park",
     "description": "Uitgestrekte heide- en bosgebieden met karakteristieke schaapskuddes",
     "latitude": 52.8333,
-    "longitude": 6.2500
+    "longitude": 6.2500,
+    "image_url": "https://pixabay.com/photos/search/Nationaal-Park-Drents-Friese-Wold/"
   },
   {
     "id": 24,
@@ -189,7 +212,8 @@
     "type": "natuurpark",
     "description": "Internationaal natuurgebied met slikken, schorren en duinen",
     "latitude": 51.3667,
-    "longitude": 3.3500
+    "longitude": 3.3500,
+    "image_url": "https://pixabay.com/photos/search/Zwin-Natuur-Park/"
   },
   {
     "id": 25,
@@ -197,7 +221,8 @@
     "type": "nationaal park",
     "description": "Grootste aaneengesloten heidegebied van West-Europa",
     "latitude": 52.7833,
-    "longitude": 6.4167
+    "longitude": 6.4167,
+    "image_url": "https://pixabay.com/photos/search/Nationaal-Park-Dwingelderveld/"
   },
   {
     "id": 26,
@@ -205,7 +230,8 @@
     "type": "bos",
     "description": "Jong bosgebied met gevarieerde boomsoorten en recreatiemogelijkheden",
     "latitude": 52.3000,
-    "longitude": 4.6833
+    "longitude": 4.6833,
+    "image_url": "https://pixabay.com/photos/search/Haarlemmermeer-Bos/"
   },
   {
     "id": 27,
@@ -213,7 +239,8 @@
     "type": "nationaal park",
     "description": "Voormalige zeebodem nu rijk vogelgebied en donkere hemel park",
     "latitude": 53.3500,
-    "longitude": 6.2000
+    "longitude": 6.2000,
+    "image_url": "https://pixabay.com/photos/search/Nationaal-Park-Lauwersmeer/"
   },
   {
     "id": 28,
@@ -221,7 +248,8 @@
     "type": "stadspark",
     "description": "Groot stadspark met bos en plas in Rotterdam",
     "latitude": 51.9333,
-    "longitude": 4.5167
+    "longitude": 4.5167,
+    "image_url": "https://pixabay.com/photos/search/Kralingse-Bos/"
   },
   {
     "id": 29,
@@ -229,7 +257,8 @@
     "type": "nationaal park",
     "description": "Jonge natuur in de Flevopolder met bijzondere flora en fauna",
     "latitude": 52.6167,
-    "longitude": 5.7500
+    "longitude": 5.7500,
+    "image_url": "https://pixabay.com/photos/search/Nationaal-Park-Nieuw-Land/"
   },
   {
     "id": 30,
@@ -237,6 +266,7 @@
     "type": "nationaal park",
     "description": "Heuvelachtig bosgebied met landgoederen en kastelen",
     "latitude": 52.1167,
-    "longitude": 5.3000
+    "longitude": 5.3000,
+    "image_url": "https://pixabay.com/photos/search/Utrechtse-Heuvelrug/"
   }
 ]
