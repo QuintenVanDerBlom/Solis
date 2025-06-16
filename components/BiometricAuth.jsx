@@ -112,7 +112,7 @@ export default function BiometricAuth({ theme, onSuccess, onCancel, action = "wi
                 />
                 <Text style={styles.biometricTitle}>Beveiliging Vereist</Text>
                 <Text style={styles.biometricSubtitle}>
-                    Bevestig je identiteit om deze locatiegegevens te kunnen {action}
+                    Bevestig je identiteit om deze locatiegegevens te kunnen wijzigen.
                 </Text>
 
                 <TouchableOpacity

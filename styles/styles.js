@@ -529,12 +529,15 @@ export const getThemeStyles = (theme) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: 16,
+            padding: 24,
+            paddingVertical: 20,
+            paddingHorizontal: 28,
             borderRadius: 12,
             width: '100%',
             marginBottom: 16,
             gap: 10,
         },
+
         biometricButtonDisabled: {
             opacity: 0.6,
         },

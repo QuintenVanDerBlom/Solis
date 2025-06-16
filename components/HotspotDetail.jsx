@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    TextInput,
-    Alert,
-    Modal,
-    Dimensions
-} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Modal, Dimensions, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker } from 'react-native-maps';
@@ -27,6 +18,8 @@ export default function HotspotDetail({ route, navigation, theme }) {
     const [visitCount, setVisitCount] = useState(0);
     const [showBiometricModal, setShowBiometricModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
     const styles = getThemeStyles(theme);
 
     useEffect(() => {
@@ -35,25 +28,21 @@ export default function HotspotDetail({ route, navigation, theme }) {
 
     const loadLocalData = async () => {
         try {
-            // Laad favorieten
             const favorites = await AsyncStorage.getItem('favorites');
             if (favorites) {
                 const favList = JSON.parse(favorites);
                 setIsFavorite(favList.includes(hotspot.id));
             }
 
-            // Laad notities
             const savedNotes = await AsyncStorage.getItem(`notes_${hotspot.id}`);
             if (savedNotes) {
                 setNotes(savedNotes);
                 setTempNotes(savedNotes);
             }
 
-            // Laad rating
             const savedRating = await AsyncStorage.getItem(`rating_${hotspot.id}`);
             if (savedRating) setRating(parseInt(savedRating));
 
-            // Laad bezoek teller
             const savedVisits = await AsyncStorage.getItem(`visits_${hotspot.id}`);
             if (savedVisits) setVisitCount(parseInt(savedVisits));
         } catch (error) {
@@ -156,6 +145,68 @@ export default function HotspotDetail({ route, navigation, theme }) {
         });
     };
 
+    const shareHotspotData = async () => {
+        try {
+            const shareContent = {
+                title: `${hotspot.name} - Natuurgebied`,
+                message: `Bekijk deze locatie: ${hotspot.name}\n\n` +
+                    `Type: ${hotspot.type}\n` +
+                    `Beschrijving: ${hotspot.description}\n` +
+                    `Locatie: ${hotspot.latitude}, ${hotspot.longitude}\n` +
+                    `Mijn beoordeling: ${rating > 0 ? `${rating} sterren` : 'Nog niet beoordeeld'}\n` +
+                    `Aantal bezoeken: ${visitCount}\n` +
+                    `${notes ? `Mijn notities: ${notes}` : ''}\n\n` +
+                    `Gedeeld vanuit de Solice App`,
+                url: `https://maps.google.com/?q=${hotspot.latitude},${hotspot.longitude}`
+            };
+
+            await Share.share(shareContent);
+        } catch (error) {
+            console.log('Error sharing:', error);
+            Alert.alert('Error', 'Kon gegevens niet delen');
+        }
+    };
+
+    // Delete functionaliteit
+    const confirmDeleteAllData = () => {
+        setShowDeleteConfirm(true);
+    };
+
+    const deleteAllLocalData = () => {
+        requireBiometricAuth('alle gegevens verwijderen', async () => {
+            try {
+                // Verwijder alle lokale data voor deze hotspot
+                await AsyncStorage.multiRemove([
+                    `notes_${hotspot.id}`,
+                    `rating_${hotspot.id}`,
+                    `visits_${hotspot.id}`
+                ]);
+
+                // Verwijder uit favorieten
+                const favorites = await AsyncStorage.getItem('favorites');
+                if (favorites) {
+                    const favList = JSON.parse(favorites);
+                    const updatedFavList = favList.filter(id => id !== hotspot.id);
+                    await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavList));
+                }
+
+                // Reset alle states
+                setNotes('');
+                setTempNotes('');
+                setRating(0);
+                setVisitCount(0);
+                setIsFavorite(false);
+                setShowDeleteConfirm(false);
+                setHasUnsavedChanges(false);
+
+                Alert.alert('Succes', 'Alle lokale gegevens zijn verwijderd');
+            } catch (error) {
+                console.log('Error deleting data:', error);
+                Alert.alert('Error', 'Kon gegevens niet verwijderen');
+            }
+        });
+    };
+
     const navigateToMap = () => {
         navigation.navigate('HotspotMapDetail', { hotspot });
     };
@@ -181,47 +232,65 @@ export default function HotspotDetail({ route, navigation, theme }) {
     };
 
     const getTypeIcon = (type) => {
-        switch (type.toLowerCase()) {
+        const typeKey = type.toLowerCase();
+        switch (typeKey) {
             case 'bos': return 'leaf';
             case 'nationaal park': return 'earth';
             case 'bloementuin': return 'flower';
             case 'wetland': return 'water';
+            case 'waterrijk gebied': return 'boat';
+            case 'cultuurlandschap': return 'business';
+            case 'stadspark': return 'library';
+            case 'natuurgebied': return 'trail-sign';
+            case 'natuurpark': return 'mountain';
+            case 'natuurreservaat': return 'shield-checkmark';
             default: return 'location';
+        }
+    };
+
+    const getTypeColor = (type) => {
+        const typeKey = type.toLowerCase();
+        switch (typeKey) {
+            case 'bos': return '#228B22';
+            case 'nationaal park': return '#2E8B57';
+            case 'bloementuin': return '#FF69B4';
+            case 'wetland': return '#4682B4';
+            case 'waterrijk gebied': return '#1E90FF';
+            case 'cultuurlandschap': return '#8B4513';
+            case 'stadspark': return '#32CD32';
+            case 'natuurgebied': return '#9ACD32';
+            case 'natuurpark': return '#6B8E23';
+            case 'natuurreservaat': return '#008B8B';
+            default: return '#27ae60';
         }
     };
 
     return (
         <>
             <ScrollView style={styles.container}>
-                {/* Header met afbeelding placeholder */}
-                <View style={styles.imageContainer}>
-                    <View style={styles.imagePlaceholder}>
-                        <Ionicons
-                            name={getTypeIcon(hotspot.type)}
-                            size={60}
-                            color="#27ae60"
-                        />
-                    </View>
-                    <TouchableOpacity
-                        style={styles.favoriteButtonOverlay}
-                        onPress={toggleFavorite}
-                    >
-                        <Ionicons
-                            name={isFavorite ? 'heart' : 'heart-outline'}
-                            size={28}
-                            color={isFavorite ? '#e74c3c' : '#ffffff'}
-                        />
-                    </TouchableOpacity>
-                </View>
-
                 {/* Basis informatie */}
                 <View style={styles.infoSection}>
                     <Text style={styles.title}>{hotspot.name}</Text>
                     <View style={styles.typeContainer}>
-                        <Ionicons name={getTypeIcon(hotspot.type)} size={16} color="#27ae60" />
-                        <Text style={styles.typeText}>{hotspot.type}</Text>
+                        <Ionicons name={getTypeIcon(hotspot.type)} size={16} color={getTypeColor(hotspot.type)} />
+                        <Text style={[styles.typeText, { color: getTypeColor(hotspot.type) }]}>{hotspot.type}</Text>
                     </View>
                     <Text style={styles.description}>{hotspot.description}</Text>
+
+                    {/* Favorite button moved to info section */}
+                    <TouchableOpacity
+                        style={styles.favoriteButton}
+                        onPress={toggleFavorite}
+                    >
+                        <Ionicons
+                            name={isFavorite ? 'heart' : 'heart-outline'}
+                            size={24}
+                            color={isFavorite ? '#e74c3c' : '#7f8c8d'}
+                        />
+                        <Text style={styles.favoriteButtonText}>
+                            {isFavorite ? 'Verwijder uit favorieten' : 'Toevoegen aan favorieten'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Statistieken */}
@@ -338,8 +407,9 @@ export default function HotspotDetail({ route, navigation, theme }) {
                     </TouchableOpacity>
                 </View>
 
-                {/* Actie knoppen */}
+                {/* Actie knoppen sectie */}
                 <View style={styles.actionSection}>
+                    {/* Bezoek Registreren button */}
                     <TouchableOpacity
                         style={styles.actionButton}
                         onPress={incrementVisitCount}
@@ -348,17 +418,75 @@ export default function HotspotDetail({ route, navigation, theme }) {
                         <Text style={styles.actionButtonText}>Bezoek Registreren</Text>
                     </TouchableOpacity>
 
+                    {/* Share button */}
                     <TouchableOpacity
-                        style={[styles.actionButton, styles.secondaryButton]}
-                        onPress={navigateToMap}
+                        style={[styles.actionButton, { backgroundColor: '#3498db', marginTop: 10 }]}
+                        onPress={shareHotspotData}
                     >
-                        <Ionicons name="map" size={20} color="#27ae60" />
-                        <Text style={[styles.actionButtonText, styles.secondaryButtonText]}>Bekijk op Kaart</Text>
+                        <Ionicons name="share-outline" size={20} color="#ffffff" />
+                        <Text style={styles.actionButtonText}>Delen</Text>
+                    </TouchableOpacity>
+
+                    {/* Delete button */}
+                    <TouchableOpacity
+                        style={[styles.actionButton, { backgroundColor: '#e74c3c', marginTop: 10 }]}
+                        onPress={confirmDeleteAllData}
+                    >
+                        <Ionicons name="trash-outline" size={20} color="#ffffff" />
+                        <Text style={styles.actionButtonText}>Alle Gegevens Verwijderen</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
 
-            {/* Biometric Authentication Modal */}
+            <Modal
+                visible={showDeleteConfirm}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setShowDeleteConfirm(false)}
+            >
+                <View style={styles.modalOverlay || {
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <View style={styles.deleteModal || {
+                        backgroundColor: 'white',
+                        padding: 20,
+                        borderRadius: 10,
+                        margin: 20,
+                        alignItems: 'center'
+                    }}>
+                        <Ionicons name="warning" size={48} color="#e74c3c" />
+                        <Text style={[styles.title, { textAlign: 'center', marginTop: 10 }]}>
+                            Alle gegevens verwijderen?
+                        </Text>
+                        <Text style={[styles.description, { textAlign: 'center', marginVertical: 15 }]}>
+                            Dit verwijdert alle lokale gegevens voor deze locatie:
+                            {'\n'}• Notities
+                            {'\n'}• Beoordeling
+                            {'\n'}• Bezoekteller
+                            {'\n'}• Favorietenstatus
+                            {'\n\n'}Deze actie kan niet ongedaan worden gemaakt.
+                        </Text>
+                        <View style={styles.notesActionContainer}>
+                            <TouchableOpacity
+                                onPress={() => setShowDeleteConfirm(false)}
+                                style={[styles.notesButton, styles.cancelButton]}
+                            >
+                                <Text style={[styles.notesButtonText, styles.cancelButtonText]}>Annuleren</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={deleteAllLocalData}
+                                style={[styles.notesButton, { backgroundColor: '#e74c3c' }]}
+                            >
+                                <Text style={styles.notesButtonText}>Verwijderen</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
             <Modal
                 visible={showBiometricModal}
                 transparent={true}
